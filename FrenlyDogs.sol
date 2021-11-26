@@ -44,7 +44,7 @@ contract MyNFT is ERC721URIStorage, Ownable, IERC20, AccessControl {
     }
     
     function approval() public onlyRole(WHITELISTED_ROLE) {
-        dog.approve(owner, mintCost);
+        dog.approve(owner(), mintCost);
     }
 
     function buy() public onlyRole(WHITELISTED_ROLE) {
@@ -55,7 +55,7 @@ contract MyNFT is ERC721URIStorage, Ownable, IERC20, AccessControl {
         revokeRole(WHITELISTED_ROLE, sender);
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
-        dog.safeTransferFrom(sender, owner, mintCost);
+        dog.safeTransferFrom(sender, owner(), mintCost);
         _mint(sender, newItemId); // mints the next token to the address provided
     }
 
