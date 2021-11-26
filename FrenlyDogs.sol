@@ -14,11 +14,17 @@ contract MyNFT is ERC721URIStorage, Ownable, IERC20, AccessControl {
     using SafeERC20 for IERC20;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
+    IERC20 public dog;
+    // Create a new role identifier for the minter role
+    bytes32 public constant WHITELISTED_ROLE = keccak256("WHITELISTED_ROLE");
+    uint128 mintCost = 13810000000000000000000;
 
-    constructor() public ERC721("FrenlyDogs", "FND") {
-        addWhitelistAdmin(owner);
-        addWhitelisted(account1, account2);
-        IERC20 dog public;
+    constructor(address whitelisted) ERC721("FrenlyDogs", "FND") {
+        // Grant the minter role to a specified account
+        _setupRole(WHITELISTED_ROLE, whitelisted);
+        // Grant the contract deployer the default admin role: it will be able
+        // to grant and revoke any roles
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
@@ -34,19 +40,23 @@ contract MyNFT is ERC721URIStorage, Ownable, IERC20, AccessControl {
         uint256 newItemId = _tokenIds.current();
         _mint(recipient, newItemId);
         _setTokenURI(newItemId, tokenURI);
-
         return newItemId;
     }
     
-    function approval() public onlyWhitelisted {
-        dog.approve(owner, 13810000000000000000000);
+    function approval() public onlyRole(WHITELISTED_ROLE) {
+        dog.approve(owner, mintCost);
     }
 
-    function buy() public onlyWhitelisted {
+    function buy() public onlyRole(WHITELISTED_ROLE) {
         address sender = _msgSender();
-        removeWhitelisted(sender);
-        dog.safetransferFrom(sender, owner, 13810000000000000000000);
-        _mint(sender); // mints the next token to the address provided
+        // Check that the calling account has the whitelisted role
+        require(hasRole(WHITELISTED_ROLE, msg.sender), "Caller is not whitelisted");
+        // Revoke the whitelisted role and then mint.
+        revokeRole(WHITELISTED_ROLE, sender);
+        _tokenIds.increment();
+        uint256 newItemId = _tokenIds.current();
+        dog.safeTransferFrom(sender, owner, mintCost);
+        _mint(sender, newItemId); // mints the next token to the address provided
     }
 
 }
