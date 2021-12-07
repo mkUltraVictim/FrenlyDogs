@@ -22,7 +22,7 @@ contract MyNFT is ERC721URIStorage, Ownable, AccessControl {
         // Grant the WHITELISTED_ROLE to all addresses in array 'whitelisted'
         for (uint i=0; i<whitelisted.length; i++) {
             address whitelistfinal = whitelisted[i];
-            grantRole(WHITELISTED_ROLE, whitelistfinal);
+            _setupRole(WHITELISTED_ROLE, whitelistfinal);
         }
     }
 
