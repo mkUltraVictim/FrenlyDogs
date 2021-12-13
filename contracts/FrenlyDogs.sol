@@ -20,7 +20,8 @@ contract MyNFT is ERC721URIStorage, Ownable, AccessControl {
     bytes32 public constant WHITELISTED_ROLE = keccak256("WHITELISTED_ROLE");
     uint128 MINTCOST = 6905000000000000000000;
 
-    constructor(address[] memory whitelisted) ERC721("Frenly Dogs", "FND") {
+    constructor(address[] memory whitelisted, address dogAddress) ERC721("Frenly Dogs", "FND") Ownable() {
+        dog = IERC20(dog);
         // Grant the WHITELISTED_ROLE to all addresses in array 'whitelisted'
         for (uint i=0; i<whitelisted.length; i++) {
             address whitelistfinal = whitelisted[i];
