@@ -7,29 +7,27 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
 
 import "hardhat/console.sol";
-
-contract MyNFT is ERC721URIStorage, Ownable, AccessControl {
+contract MyNFT is ERC721URIStorage, Ownable {
     using SafeERC20 for IERC20;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     IERC20 public dog;
-    // Create a new role identifier for the whitelisted role
-    bytes32 public constant WHITELISTED_ROLE = keccak256("WHITELISTED_ROLE");
     uint128 MINTCOST = 6905000000000000000000;
+    mapping(address => bool) whitelist;
 
-    constructor(address[] memory whitelisted) ERC721("Frenly Dogs", "FND") {
-        // Grant the WHITELISTED_ROLE to all addresses in array 'whitelisted'
+    constructor(address[] memory whitelisted, address dogAddress) ERC721("Frenly Dogs", "FND") Ownable() {
+        dog = IERC20(dogAddress);
+        // Add all addresses in array to whitelist mapping
         for (uint i=0; i<whitelisted.length; i++) {
             address whitelistfinal = whitelisted[i];
             console.log("address in whitelist: %s", whitelistfinal);
-            _setupRole(WHITELISTED_ROLE, whitelistfinal);
+            whitelist[whitelistfinal] = true;
         }
     }
 
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, AccessControl) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721) returns (bool) {
         return
             interfaceId == type(IERC721).interfaceId ||
             interfaceId == type(IERC721Metadata).interfaceId ||
@@ -52,13 +50,14 @@ contract MyNFT is ERC721URIStorage, Ownable, AccessControl {
         return newItemId;
     }
 
-    function buy() public onlyRole(WHITELISTED_ROLE) {
+    function buy() public {
         address sender = _msgSender();
+        require(whitelist[sender], "This address is not whitelisted.");
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         dog.safeTransferFrom(sender, owner(), MINTCOST);
         _safeMint(sender, newItemId); 
-        revokeRole(WHITELISTED_ROLE, sender);
+        whitelist[sender] = false;
     }
 
 }
