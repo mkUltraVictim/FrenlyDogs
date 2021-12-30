@@ -14,7 +14,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     IERC20 public dog;
-    uint128 MINTCOST = 6905000000000000000000;
+    uint128 MINTCOST = 13810000000000000000000;
     mapping(address => bool) whitelist;
 
     constructor(address[] memory whitelisted, address dogAddress) ERC721("Frenly Dogs", "FND") Ownable() {
@@ -35,7 +35,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
     }
     
     function _baseURI() internal view virtual override returns (string memory) {
-        return "ipfs://metadatas_to_be_added/";
+        return "ipfs://bafybeidlcn7h6tgdgy2meifpz4h6ydpanvihwipe7xiaytjzltl2gr6ke4/";
     }
 
     function mintNFT(address recipient, string memory tokenURI)
