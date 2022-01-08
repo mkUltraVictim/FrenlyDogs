@@ -15,7 +15,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIds;
     IERC20 public dog;
     uint128 MINTCOST = 13810000000000000000000;
-    mapping(address => bool) whitelist;
+    mapping(address => uint8) whitelist;
 
     constructor(address[] memory whitelisted, address dogAddress) ERC721("Frenly Dogs", "FND") Ownable() {
         dog = IERC20(dogAddress);
@@ -23,7 +23,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
         for (uint i=0; i<whitelisted.length; i++) {
             address whitelistfinal = whitelisted[i];
             console.log("address in whitelist: %s", whitelistfinal);
-            whitelist[whitelistfinal] = true;
+            whitelist[whitelistfinal] = 3;
         }
     }
 
@@ -52,12 +52,12 @@ contract MyNFT is ERC721URIStorage, Ownable {
 
     function buy() public {
         address sender = _msgSender();
-        require(whitelist[sender], "This address is not whitelisted.");
+        require(whitelist[sender] > 0, "This address is not whitelisted or has minted max count.");
+        whitelist[sender]--;
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         dog.safeTransferFrom(sender, owner(), MINTCOST);
         _safeMint(sender, newItemId); 
-        whitelist[sender] = false;
     }
 
 }
