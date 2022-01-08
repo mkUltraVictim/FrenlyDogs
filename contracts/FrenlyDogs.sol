@@ -53,6 +53,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
     function buy() public {
         address sender = _msgSender();
         require(whitelist[sender] > 0, "This address is not whitelisted or has minted max count.");
+        require(_tokenIds.current() < 100, "Sold out");
         whitelist[sender]--;
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
