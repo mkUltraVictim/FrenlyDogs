@@ -33,9 +33,9 @@ contract MyNFT is ERC721URIStorage, Ownable {
             interfaceId == type(IERC721Metadata).interfaceId ||
             super.supportsInterface(interfaceId);
     }
-    
+
     function _baseURI() internal view virtual override returns (string memory) {
-        return "ipfs://bafybeidlcn7h6tgdgy2meifpz4h6ydpanvihwipe7xiaytjzltl2gr6ke4/";
+        return "ipfs://bafybeicjnawn5fzcrbad7vvjahpcku2omtyvfm3jsivlqiamgqxjspaqrq/";
     }
 
     function mintNFT(address recipient, string memory tokenURI)
