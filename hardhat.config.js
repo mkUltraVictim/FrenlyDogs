@@ -18,6 +18,14 @@ module.exports = {
     mainnet: {
       url: ""+config.MAINNET_RPC,
       accounts: [config.ACCOUNT]
+    },
+    matic: {
+      url: ""+config.MATIC_RPC,
+      accounts: [config.ACCOUNT]
+    },
+    ropsten: {
+      url: ""+config.ROPSTEN_RPC,
+      accounts: [config.ACCOUNT]
     }
   }
 };

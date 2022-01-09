@@ -1,0 +1,6 @@
+{
+    "MAINNET_RPC": "https://ropsten.infura.io/v3/18d60f00fbcb49f18cc7900e4ffa298f",
+    "ACCOUNT": "YOUR_PRIVATE_KEY",
+    "MATIC_RPC": "https://polygon-mainnet.g.alchemy.com/v2/MErMPLB28D4KLvLbTFst3nAiclBaGwEo",
+    "ROPSTEN_RPC": "https://ropsten.infura.io/v3/18d60f00fbcb49f18cc7900e4ffa298f"
+}
