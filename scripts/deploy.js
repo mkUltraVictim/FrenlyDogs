@@ -64,12 +64,12 @@ async function deployContract(tokenAddress) {
   
   // Start deployment, returning a promise that resolves to a contract object
   const MyNFT = await ethers.getContractFactory("MyNFT");
-  const myNFT = await MyNFT.deploy(whitelist, tokenAddress);
+  const myNFT = await MyNFT.deploy(whitelist, tokenAddress, {gasPrice: ethers.BigNumber.from(web3.utils.toWei("80", "gwei"))});
   return myNFT
 }
 
 async function main() {
-  let tokenAddress = await deployTestToken();
+  let tokenAddress = "0xbaac2b4491727d78d2b78815144570b9f2fe8899";
   let deployed = await deployContract(tokenAddress);
   console.log(deployed);
 }
